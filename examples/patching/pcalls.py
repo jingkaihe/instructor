@@ -42,7 +42,7 @@ if __name__ == "__main__":
     print(f"# Time: {time.perf_counter() - start:.2f}")
 
     # print("# Instructor: Question with Toronto and Super Bowl")
-    # print([model for model in resp])
+    print([model for model in resp])
 
     start = time.perf_counter()
     resp = client.client.chat.completions.create(

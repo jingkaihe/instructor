@@ -33,20 +33,25 @@ class ParallelBase:
         mode: Mode,
         validation_context: Optional[Any] = None,
         strict: Optional[bool] = None,
-    ) -> Generator[tuple[str, BaseModel], None, None]:
+    ) -> (any, list[tuple[str, BaseModel]]):
         #! We expect this from the OpenAISchema class, We should address
         #! this with a protocol or an abstract class... @jxnlco
         assert mode == Mode.PARALLEL_TOOLS, "Mode must be PARALLEL_TOOLS"
+        result: list[tuple[str, BaseModel]] = []
         for tool_call in response.choices[0].message.tool_calls:
             name = tool_call.function.name
             arguments = tool_call.function.arguments
             tool_call_id: str = tool_call.id
-            yield (
-                tool_call_id,
-                self.registry[name].model_validate_json(
-                    arguments, context=validation_context, strict=strict
-                ),
+
+            result.append(
+                (
+                    tool_call_id,
+                    self.registry[name].model_validate_json(
+                        arguments, context=validation_context, strict=strict
+                    ),
+                )
             )
+        return response.choices[0].message, result
 
 
 if sys.version_info >= (3, 10):
