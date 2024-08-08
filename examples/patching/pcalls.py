@@ -41,11 +41,11 @@ if __name__ == "__main__":
     )
     print(f"# Time: {time.perf_counter() - start:.2f}")
 
-    print("# Instructor: Question with Toronto and Super Bowl")
-    print([model for model in resp])
+    # print("# Instructor: Question with Toronto and Super Bowl")
+    # print([model for model in resp])
 
     start = time.perf_counter()
-    resp = client.chat.completions.create(
+    resp = client.client.chat.completions.create(
         model="gpt-4-turbo-preview",
         messages=[
             {
@@ -61,12 +61,12 @@ if __name__ == "__main__":
     )
     print(f"# Time: {time.perf_counter() - start:.2f}")
 
-    print("# Question with Toronto and Dallas")
-    for tool_call in resp.choices[0].message.tool_calls:
-        print(tool_call.model_dump_json(indent=2))
+    # print("# Question with Toronto and Dallas")
+    # for tool_call in resp.choices[0].message.tool_calls:
+    #     print(tool_call.model_dump_json(indent=2))
 
     start = time.perf_counter()
-    resp = client.chat.completions.create(
+    resp = client.client.chat.completions.create(
         model="gpt-4-turbo-preview",
         messages=[
             {
@@ -79,9 +79,10 @@ if __name__ == "__main__":
             {"type": "function", "function": GoogleSearch.openai_schema},
         ],
         tool_choice="auto",
+        parallel_tool_calls=True,
     )
     print(f"# Time: {time.perf_counter() - start:.2f}")
 
-    print("# Question with Toronto and Super Bowl")
-    for tool_call in resp.choices[0].message.tool_calls:
-        print(tool_call.model_dump_json(indent=2))
+    # print("# Question with Toronto and Super Bowl")
+    # for tool_call in resp.choices[0].message.tool_calls:
+    #     print(tool_call.model_dump_json(indent=2))

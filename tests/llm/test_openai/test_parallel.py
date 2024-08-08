@@ -48,7 +48,12 @@ def test_sync_parallel_tools_or(client):
         ],
         response_model=Iterable[Union[Weather, GoogleSearch]],
     )
-    assert len(list(resp)) == 3
+    resp_list = list(resp)
+    for resp_item in resp_list:
+        assert isinstance(resp_item, tuple)
+        assert isinstance(resp_item[0], str)
+        assert isinstance(resp_item[1], BaseModel)
+    assert len(resp_list) == 3
 
 
 @pytest.mark.asyncio
@@ -66,7 +71,10 @@ async def test_async_parallel_tools_or(model, mode, aclient):
         ],
         response_model=Iterable[Union[Weather, GoogleSearch]],
     )
-    assert len(list(resp)) == 3
+    resp_list = list(resp)
+    for resp_item in resp_list:
+        assert isinstance(resp_item, BaseModel)
+    assert len(resp_list) == 3
 
 
 def test_sync_parallel_tools_one(client):
@@ -82,7 +90,13 @@ def test_sync_parallel_tools_one(client):
         ],
         response_model=Iterable[Weather],
     )
-    assert len(list(resp)) == 2
+    # assert len(list(resp)) == 2
+    resp_list = list(resp)
+    for resp_item in resp_list:
+        assert isinstance(resp_item, tuple)
+        assert isinstance(resp_item[0], str)
+        assert isinstance(resp_item[1], Weather)
+    assert len(resp_list) == 2
 
 
 @pytest.mark.asyncio
@@ -99,4 +113,8 @@ async def test_async_parallel_tools_one(aclient):
         ],
         response_model=Iterable[Weather],
     )
-    assert len(list(resp)) == 2
+    resp_list = list(resp)
+    for resp_item in resp_list:
+        assert isinstance(resp_item, tuple)
+        assert isinstance(resp_item[0], str)
+        assert isinstance(resp_item[1], Weather)
