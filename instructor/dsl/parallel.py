@@ -37,7 +37,12 @@ class ParallelBase:
         #! We expect this from the OpenAISchema class, We should address
         #! this with a protocol or an abstract class... @jxnlco
         assert mode == Mode.PARALLEL_TOOLS, "Mode must be PARALLEL_TOOLS"
+
         result: list[tuple[str, BaseModel]] = []
+
+        if response.choices[0].message.tool_calls is None:
+            return response.choices[0].message, result
+
         for tool_call in response.choices[0].message.tool_calls:
             name = tool_call.function.name
             arguments = tool_call.function.arguments
